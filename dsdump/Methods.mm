@@ -77,7 +77,7 @@ void dumpObjectiveCMethods(method_list_t* methodList, const char *name, bool isM
 //        }
         long index = 0; // (int)(h - methodName);
         auto len = strlen(methodName);
-        for (int i = 0; i < numArguments && index < len; i++) {
+        for (int argIdx = 0; argIdx < numArguments && index < len; argIdx++) {
             auto found = strchr(&methodName[index], ':');
             if (!found) { // hit end of str or no args
                 printf("%s%s%s", overrideColor ? overrideColor : dcolor(DSCOLOR_BOLD), &methodName[index], color_end());
@@ -86,10 +86,10 @@ void dumpObjectiveCMethods(method_list_t* methodList, const char *name, bool isM
             found++;
             auto cur = (found - &methodName[index]);
             char dest[1024] = {};
-            encoding_getArgumentType(types, i, dest, 1024);
-            printf("%s%.*s(%s)%sarg%d", overrideColor ? overrideColor : dcolor(DSCOLOR_BOLD), (int)cur, &methodName[index],   translate_method_type_to_string(dest), color_end(), i+1);
+            encoding_getArgumentType(types, argIdx+2, dest, 1024);
+            printf("%s%.*s(%s)%sarg%d", overrideColor ? overrideColor : dcolor(DSCOLOR_BOLD), (int)cur, &methodName[index],   translate_method_type_to_string(dest), color_end(), argIdx+1);
             index = (found - methodName);
-            if (i < numArguments - 1) {
+            if (argIdx < numArguments-3) {
                 putchar(' ');
             }
         }
