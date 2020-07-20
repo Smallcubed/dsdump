@@ -301,28 +301,8 @@ NSDictionary <NSString*, NSNumber*> *blacklistedSelectors = nil;
             continue;
         }
         
-        auto dumpCategoryMethods = [&](method_list* methodsList, bool isClassMethod) {
-            if (methodsList == nullptr) {
-                return;
-            }
-            auto methodsListDisk = methodsList->disk();
-            auto count = methodsListDisk->count;
-            auto c = isClassMethod ? '+' : '-';
-            
-            if (xref_options.verbose > VERBOSE_2) {
-                printf("\t// %s methods\n", isClassMethod ? "class" : "instance");
-            }
-            for (int j = 0; j < count; j++) {
-                auto method = methodsListDisk->GetMethod(j, false);
-                auto methodName = method->getName()->disk();
-                printf("\t%s0x%011lx%s %s%c[%s(%s) %s]%s\n", dcolor(DSCOLOR_GRAY), (uintptr_t)method->getImp()->strip_PAC(), color_end(), dcolor(DSCOLOR_BOLD), c, clsName, categoryName, methodName, color_end());
-            }
-            putchar('\n');
-        };
-        
-        dumpCategoryMethods(category->disk()->classMethods, true);
-        dumpCategoryMethods(category->disk()->instanceMethods, false);
-        
+        dumpObjectiveCMethods(category->disk()->classMethods, "", true);
+        dumpObjectiveCMethods(category->disk()->instanceMethods, "", false);
     }
 }
 
