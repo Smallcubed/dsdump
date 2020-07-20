@@ -61,14 +61,14 @@ void dumpObjectiveCMethods(method_list_t* methodList, const char *name, bool isM
         
         putchar(' ');
         if (xref_options.verbose > VERBOSE_2 && !isProtocol) {
-            printf(" %s0x%011lx%s ", overrideColor ? overrideColor: dcolor(DSCOLOR_GRAY), (unsigned long)methodAddress, color_end());
+         //   printf(" %s0x%011lx%s ", overrideColor ? overrideColor: dcolor(DSCOLOR_GRAY), (unsigned long)methodAddress, color_end());
         }
         
         if (xref_options.verbose <= VERBOSE_4) {
             printf("%s%c[%s %s]%s\n", overrideColor? overrideColor : dcolor(DSCOLOR_BOLD), "-+"[isMeta ? 1 : 0], name, methodName, color_end());
             continue;
         }
-        printf("%c(%s%s%s)", "-+"[isMeta ? 1 : 0], overrideColor? overrideColor : dcolor(DSCOLOR_BOLD),  translate_method_type_to_string(path), color_end());
+        printf("%c (%s%s%s)", "-+"[isMeta ? 1 : 0], overrideColor? overrideColor : dcolor(DSCOLOR_BOLD),  translate_method_type_to_string(path), color_end());
         
 //        if (isProtocol) {
 //            printf("\t%s%c[%s %s\n", dcolor(DSCOLOR_BOLD), "-+"[isMeta ? 1 : 0], name, color_end());
@@ -93,6 +93,7 @@ void dumpObjectiveCMethods(method_list_t* methodList, const char *name, bool isM
                 putchar(' ');
             }
         }
+        putchar(';');
         putchar('\n');
     }
     

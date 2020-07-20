@@ -101,7 +101,7 @@ NSDictionary <NSString*, NSNumber*> *blacklistedSelectors = nil;
         auto ivarName = ivr->name->disk();
         auto ivarType = ivr->type->disk();
         __ivarsDictionary[@(ivarOffset)] = [NSString stringWithUTF8String:ivarName];
-        printf("\t+0x%04x %s %s (0x%x)\n", ivarOffset, ivarType, ivarName, ivr->size);
+        printf("\t//+0x%04x %s %s (0x%x)\n", ivarOffset, ivarType, ivarName, ivr->size);
     }
     
     printf("}\n");
@@ -147,7 +147,8 @@ NSDictionary <NSString*, NSNumber*> *blacklistedSelectors = nil;
                 dshelpers::simple_demangle(name, str);
                 printf("0x%011lx %s%s%s", resolvedAddress,  dcolor(DSCOLOR_CYAN), dshelpers::simple_demangle(name, str), color_end());
             } else {
-                printf("0x%011lx %s%s%s", resolvedAddress,  dcolor(DSCOLOR_CYAN), name, color_end());
+                printf("@interface %s%s%s",  dcolor(DSCOLOR_CYAN), name, color_end());
+//                printf("0x%011lx %s%s%s", resolvedAddress,  dcolor(DSCOLOR_CYAN), name, color_end());
             }
 
             XRBindSymbol *objcReference = nil;
@@ -197,12 +198,7 @@ NSDictionary <NSString*, NSNumber*> *blacklistedSelectors = nil;
             //////////////////////////////////////////////////////
             // Print the libraries of Objc classes if verbose 4 //
             //////////////////////////////////////////////////////
-            if (xref_options.verbose > VERBOSE_3) {
-                char *libName = objcReference && objcReference.libOrdinal ? (char*)self.depdencies[objcReference.libOrdinal].UTF8String : NULL;
-                if (libName) {
-                    printf(" %s%s%s", dcolor(DSCOLOR_YELLOW), libName, color_end());
-                }
-            }
+           
             
             ///////////////////////
             // Dump protocols... //
@@ -211,6 +207,12 @@ NSDictionary <NSString*, NSNumber*> *blacklistedSelectors = nil;
                 putchar('\n');
             }
             
+            if (xref_options.verbose > VERBOSE_3) {
+                char *libName = objcReference && objcReference.libOrdinal ? (char*)self.depdencies[objcReference.libOrdinal].UTF8String : NULL;
+                if (libName) {
+             //        printf("// %s%s%s\n", dcolor(DSCOLOR_YELLOW), libName, color_end());
+                }
+            }
             // property then method dumping logic dumbing logic
             if (xref_options.verbose > VERBOSE_2) {
                 
@@ -227,8 +229,9 @@ NSDictionary <NSString*, NSNumber*> *blacklistedSelectors = nil;
                 // Then Dump instance methods...
                 [self dumpObjCClassInfo:name resolvedAddress:cls];
                 
-                putchar('\n');
+             //   putchar('\n');
             }
+            printf("@end\n\n");
         }
     }
     
@@ -295,7 +298,7 @@ NSDictionary <NSString*, NSNumber*> *blacklistedSelectors = nil;
             continue;
         }
         
-        printf("0x%011lx %s%s(%s)%s\n", reinterpret_cast<uintptr_t>(category->strip_PAC()), color, clsName, categoryName, color_end());
+        printf("\n@interface %s%s(%s)%s\n", color, clsName, categoryName, color_end());
         
         if (xref_options.verbose <= VERBOSE_2) {
             continue;
@@ -303,6 +306,7 @@ NSDictionary <NSString*, NSNumber*> *blacklistedSelectors = nil;
         
         dumpObjectiveCMethods(category->disk()->classMethods, "", true);
         dumpObjectiveCMethods(category->disk()->instanceMethods, "", false);
+        printf("@end\n");
     }
 }
 
