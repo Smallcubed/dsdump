@@ -108,6 +108,12 @@ static void printPropertyAttributeTypes(const char *propertyAttributes) {
         }
         printf(")%s", color_end());
     }
+    else{
+        printf("%s(", dcolor(DSCOLOR_GRAY));
+        printf("assign");
+        printf(")%s", color_end());
+        
+    }
     free(attrs);
     
     printType(type);
